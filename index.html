@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Real-time stock market information and financial data">
+    <title>Stock5 - Real-Time Stock Market Data</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 28L12 20L18 26L28 4" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h1>Stock5</h1>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input
+                            type="text"
+                            id="searchInput"
+                            class="search-input"
+                            placeholder="Search stocks (e.g., AAPL, TSLA, GOOGL)..."
+                            autocomplete="off"
+                        >
+                        <button id="searchButton" class="search-button">Search</button>
+                    </div>
+                    <p class="search-hint">Enter a stock symbol to get real-time market data</p>
+                </div>
+            </section>
+
+            <!-- Popular Stocks Section -->
+            <section class="popular-section">
+                <h2 class="section-title">Popular Stocks</h2>
+                <div class="popular-stocks" id="popularStocks">
+                    <button class="stock-chip" data-symbol="AAPL">AAPL</button>
+                    <button class="stock-chip" data-symbol="MSFT">MSFT</button>
+                    <button class="stock-chip" data-symbol="GOOGL">GOOGL</button>
+                    <button class="stock-chip" data-symbol="AMZN">AMZN</button>
+                    <button class="stock-chip" data-symbol="TSLA">TSLA</button>
+                    <button class="stock-chip" data-symbol="META">META</button>
+                    <button class="stock-chip" data-symbol="NVDA">NVDA</button>
+                    <button class="stock-chip" data-symbol="NFLX">NFLX</button>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <div class="loading-spinner"></div>
+                <p>Fetching stock data...</p>
+            </div>
+
+            <!-- Error State -->
+            <div class="error" id="errorState">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <h3 id="errorTitle">Unable to fetch stock data</h3>
+                <p id="errorMessage">Please check the symbol and try again</p>
+            </div>
+
+            <!-- Stock Results -->
+            <section class="results-section" id="resultsSection">
+                <div class="stock-grid" id="stockGrid">
+                    <!-- Stock cards will be inserted here dynamically -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Stock5. Data provided by Yahoo Finance.</p>
+            <p class="disclaimer">Market data may be delayed. This is not investment advice.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
