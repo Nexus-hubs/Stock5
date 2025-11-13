@@ -14,20 +14,9 @@ const state = {
 };
 
 // ===========================
-// DOM Elements
+// DOM Elements (initialized in init())
 // ===========================
-const elements = {
-    searchInput: document.getElementById('searchInput'),
-    searchButton: document.getElementById('searchButton'),
-    popularStocks: document.querySelectorAll('.stock-chip'),
-    loadingState: document.getElementById('loadingState'),
-    errorState: document.getElementById('errorState'),
-    errorTitle: document.getElementById('errorTitle'),
-    errorMessage: document.getElementById('errorMessage'),
-    resultsSection: document.getElementById('resultsSection'),
-    stockGrid: document.getElementById('stockGrid'),
-    themeToggle: document.getElementById('themeToggle')
-};
+let elements = {};
 
 // ===========================
 // Utility Functions
@@ -511,10 +500,30 @@ async function loadDefaultStocks() {
 // ===========================
 
 /**
+ * Initialize DOM elements
+ */
+function initElements() {
+    elements = {
+        searchInput: document.getElementById('searchInput'),
+        searchButton: document.getElementById('searchButton'),
+        popularStocks: document.querySelectorAll('.stock-chip'),
+        loadingState: document.getElementById('loadingState'),
+        errorState: document.getElementById('errorState'),
+        errorTitle: document.getElementById('errorTitle'),
+        errorMessage: document.getElementById('errorMessage'),
+        resultsSection: document.getElementById('resultsSection'),
+        stockGrid: document.getElementById('stockGrid'),
+        themeToggle: document.getElementById('themeToggle')
+    };
+    console.log('DOM elements initialized');
+}
+
+/**
  * Initialize the application
  */
 function init() {
     console.log('Stock5 Application Starting...');
+    initElements();
     initTheme();
     initEventListeners();
     loadDefaultStocks();
