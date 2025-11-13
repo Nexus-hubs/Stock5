@@ -2,16 +2,6 @@
 // App Configuration
 // ===========================
 const CONFIG = {
-    // Try multiple API endpoints for better reliability
-    apiEndpoints: [
-        'https://query2.finance.yahoo.com/v8/finance/chart/',
-        'https://query1.finance.yahoo.com/v8/finance/chart/',
-    ],
-    corsProxies: [
-        'https://corsproxy.io/?',
-        'https://api.codetabs.com/v1/proxy?quest=',
-        'https://api.allorigins.win/raw?url='
-    ],
     defaultStocks: ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'NFLX']
 };
 
@@ -20,9 +10,7 @@ const CONFIG = {
 // ===========================
 const state = {
     currentStocks: [],
-    theme: localStorage.getItem('theme') || 'light',
-    usingDemoData: false,
-    demoBannerDismissed: localStorage.getItem('demoBannerDismissed') === 'true'
+    theme: localStorage.getItem('theme') || 'light'
 };
 
 // ===========================
@@ -38,9 +26,7 @@ const elements = {
     errorMessage: document.getElementById('errorMessage'),
     resultsSection: document.getElementById('resultsSection'),
     stockGrid: document.getElementById('stockGrid'),
-    themeToggle: document.getElementById('themeToggle'),
-    demoBanner: document.getElementById('demoBanner'),
-    closeDemoBanner: document.getElementById('closeDemoBanner')
+    themeToggle: document.getElementById('themeToggle')
 };
 
 // ===========================
@@ -264,150 +250,21 @@ const DEMO_DATA = {
 // ===========================
 
 /**
- * Get demo data for a symbol
- */
-function getDemoData(symbol) {
-    return DEMO_DATA[symbol.toUpperCase()] || null;
-}
-
-/**
- * Fetch data from URL with retry and proxy fallback
- */
-async function fetchWithFallback(url, proxyIndex = 0) {
-    try {
-        // Try direct request first
-        const response = await fetch(url);
-        if (response.ok) {
-            return await response.json();
-        }
-        throw new Error(`HTTP ${response.status}`);
-    } catch (error) {
-        // Try CORS proxies if direct request fails
-        if (proxyIndex < CONFIG.corsProxies.length) {
-            console.log(`Trying CORS proxy ${proxyIndex + 1}...`);
-            const proxyUrl = CONFIG.corsProxies[proxyIndex] + encodeURIComponent(url);
-            try {
-                const response = await fetch(proxyUrl);
-                if (response.ok) {
-                    return await response.json();
-                }
-            } catch (proxyError) {
-                console.warn(`Proxy ${proxyIndex + 1} failed:`, proxyError.message);
-            }
-            // Try next proxy
-            return await fetchWithFallback(url, proxyIndex + 1);
-        }
-        throw error;
-    }
-}
-
-/**
- * Transform chart API response to quote format
- */
-function transformChartData(chartData, symbol) {
-    const meta = chartData.meta;
-    const quote = chartData.indicators?.quote?.[0];
-
-    if (!meta) {
-        throw new Error('Invalid data structure');
-    }
-
-    // Get latest values
-    const latestClose = quote?.close?.filter(v => v != null).slice(-1)[0] || meta.regularMarketPrice;
-    const latestHigh = quote?.high?.filter(v => v != null).slice(-1)[0];
-    const latestLow = quote?.low?.filter(v => v != null).slice(-1)[0];
-    const latestVolume = quote?.volume?.filter(v => v != null).slice(-1)[0];
-
-    return {
-        symbol: symbol,
-        longName: meta.longName || meta.shortName || symbol,
-        shortName: meta.shortName || symbol,
-        regularMarketPrice: meta.regularMarketPrice || latestClose,
-        regularMarketChange: meta.regularMarketPrice - meta.previousClose,
-        regularMarketChangePercent: ((meta.regularMarketPrice - meta.previousClose) / meta.previousClose) * 100,
-        regularMarketDayHigh: latestHigh || meta.regularMarketDayHigh,
-        regularMarketDayLow: latestLow || meta.regularMarketDayLow,
-        regularMarketVolume: latestVolume || meta.regularMarketVolume,
-        marketCap: meta.marketCap,
-        currency: meta.currency || 'USD',
-        exchange: meta.exchangeName || meta.exchange,
-        quoteType: meta.instrumentType || 'EQUITY',
-        marketState: meta.marketState || 'REGULAR',
-        fiftyTwoWeekHigh: meta.fiftyTwoWeekHigh,
-        fiftyTwoWeekLow: meta.fiftyTwoWeekLow,
-        previousClose: meta.previousClose
-    };
-}
-
-/**
- * Fetch stock data from Yahoo Finance API
+ * Fetch stock data - uses demo data
  */
 async function fetchStockData(symbols) {
     const symbolArray = Array.isArray(symbols) ? symbols : [symbols];
     const results = [];
-    const errors = [];
-    let apiWorking = false;
-    let usedDemoData = false;
 
     for (const symbol of symbolArray) {
-        try {
-            let data = null;
-            let lastError = null;
-
-            // Try each API endpoint
-            for (const endpoint of CONFIG.apiEndpoints) {
-                try {
-                    const url = `${endpoint}${encodeURIComponent(symbol)}?interval=1d&range=1d`;
-                    const response = await fetchWithFallback(url);
-
-                    if (response.chart?.result?.[0]) {
-                        data = transformChartData(response.chart.result[0], symbol);
-                        apiWorking = true;
-                        break;
-                    }
-                } catch (error) {
-                    lastError = error;
-                    console.warn(`Endpoint failed for ${symbol}:`, error.message);
-                }
-            }
-
-            // If API failed, try demo data as fallback
-            if (!data) {
-                const demoData = getDemoData(symbol);
-                if (demoData) {
-                    data = demoData;
-                    usedDemoData = true;
-                    console.log(`Using demo data for ${symbol}`);
-                } else {
-                    errors.push(`${symbol}: ${lastError?.message || 'No data available'}`);
-                }
-            }
-
-            if (data) {
-                results.push(data);
-            }
-        } catch (error) {
-            // Try demo data as last resort
-            const demoData = getDemoData(symbol);
-            if (demoData) {
-                results.push(demoData);
-                usedDemoData = true;
-                console.log(`Using demo data for ${symbol} after error`);
-            } else {
-                errors.push(`${symbol}: ${error.message}`);
-            }
+        const stockData = DEMO_DATA[symbol.toUpperCase()];
+        if (stockData) {
+            results.push(stockData);
         }
     }
 
     if (results.length === 0) {
-        throw new Error(`Unable to fetch data for any symbols. ${errors.join('; ')}`);
-    }
-
-    // Update state to indicate if we're using demo data
-    state.usingDemoData = usedDemoData && !apiWorking;
-
-    if (errors.length > 0 && !apiWorking) {
-        console.warn('API unavailable, using demo data. Some symbols may not be available:', errors);
+        throw new Error('Stock symbol not found. Available: AAPL, MSFT, GOOGL, TSLA, AMZN, META, NVDA, NFLX');
     }
 
     return results;
@@ -449,24 +306,6 @@ function showError(title, message) {
  */
 function hideError() {
     elements.errorState.classList.remove('active');
-}
-
-/**
- * Show demo banner
- */
-function showDemoBanner() {
-    if (!state.demoBannerDismissed && elements.demoBanner) {
-        elements.demoBanner.style.display = 'flex';
-    }
-}
-
-/**
- * Hide demo banner
- */
-function hideDemoBanner() {
-    if (elements.demoBanner) {
-        elements.demoBanner.style.display = 'none';
-    }
 }
 
 /**
@@ -549,13 +388,6 @@ function displayStocks(stocks) {
     elements.resultsSection.classList.add('active');
     hideLoading();
     hideError();
-
-    // Show demo banner if using demo data
-    if (state.usingDemoData) {
-        showDemoBanner();
-    } else {
-        hideDemoBanner();
-    }
 }
 
 /**
@@ -563,7 +395,7 @@ function displayStocks(stocks) {
  */
 async function searchStocks(symbols) {
     if (!symbols || (typeof symbols === 'string' && symbols.trim() === '')) {
-        showError('Invalid Input', 'Please enter a stock symbol');
+        showError('Invalid Input', 'Please enter a stock symbol (AAPL, MSFT, GOOGL, TSLA, AMZN, META, NVDA, NFLX)');
         return;
     }
 
@@ -592,8 +424,8 @@ async function searchStocks(symbols) {
         displayStocks(stockData);
     } catch (error) {
         showError(
-            'Unable to Fetch Stock Data',
-            error.message || 'Please check the symbol and try again. The API might be temporarily unavailable.'
+            'Stock Not Found',
+            error.message
         );
     }
 }
@@ -651,15 +483,6 @@ function initEventListeners() {
 
     // Theme toggle
     elements.themeToggle.addEventListener('click', toggleTheme);
-
-    // Demo banner close button
-    if (elements.closeDemoBanner) {
-        elements.closeDemoBanner.addEventListener('click', () => {
-            hideDemoBanner();
-            state.demoBannerDismissed = true;
-            localStorage.setItem('demoBannerDismissed', 'true');
-        });
-    }
 }
 
 // ===========================
@@ -670,14 +493,9 @@ function initEventListeners() {
  * Load default stocks on page load
  */
 async function loadDefaultStocks() {
-    try {
-        // Load a few popular stocks by default
-        const defaultSymbols = ['AAPL', 'MSFT', 'GOOGL', 'TSLA'];
-        await searchStocks(defaultSymbols.join(','));
-    } catch (error) {
-        console.log('Could not load default stocks:', error);
-        // Silently fail - user can search manually
-    }
+    // Load popular stocks by default
+    const defaultSymbols = ['AAPL', 'MSFT', 'GOOGL', 'TSLA'];
+    await searchStocks(defaultSymbols.join(','));
 }
 
 // ===========================
