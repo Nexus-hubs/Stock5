@@ -253,16 +253,24 @@ const DEMO_DATA = {
  * Fetch stock data - uses demo data
  */
 async function fetchStockData(symbols) {
+    console.log('fetchStockData called with:', symbols);
+    console.log('DEMO_DATA defined:', typeof DEMO_DATA);
+
     const symbolArray = Array.isArray(symbols) ? symbols : [symbols];
+    console.log('symbolArray:', symbolArray);
     const results = [];
 
     for (const symbol of symbolArray) {
-        const stockData = DEMO_DATA[symbol.toUpperCase()];
+        const upperSymbol = symbol.toUpperCase();
+        console.log('Looking for:', upperSymbol);
+        const stockData = DEMO_DATA[upperSymbol];
+        console.log('Found data:', stockData ? 'YES' : 'NO');
         if (stockData) {
             results.push(stockData);
         }
     }
 
+    console.log('Total results:', results.length);
     if (results.length === 0) {
         throw new Error('Stock symbol not found. Available: AAPL, MSFT, GOOGL, TSLA, AMZN, META, NVDA, NFLX');
     }
