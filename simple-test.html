@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Stock Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .stock { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Simple Stock Test</h1>
+    <button onclick="loadStocks()">Load Stocks</button>
+    <div id="result"></div>
+
+    <script>
+        // Demo data inline
+        const stocks = {
+            'AAPL': { symbol: 'AAPL', name: 'Apple Inc.', price: 189.25 },
+            'MSFT': { symbol: 'MSFT', name: 'Microsoft', price: 378.91 },
+            'GOOGL': { symbol: 'GOOGL', name: 'Alphabet', price: 142.58 },
+            'TSLA': { symbol: 'TSLA', name: 'Tesla', price: 242.84 }
+        };
+
+        function loadStocks() {
+            const result = document.getElementById('result');
+            result.innerHTML = '';
+
+            const symbols = ['AAPL', 'MSFT', 'GOOGL', 'TSLA'];
+            symbols.forEach(symbol => {
+                const stock = stocks[symbol];
+                if (stock) {
+                    const div = document.createElement('div');
+                    div.className = 'stock';
+                    div.innerHTML = `<strong>${stock.symbol}</strong>: ${stock.name} - $${stock.price}`;
+                    result.appendChild(div);
+                }
+            });
+        }
+
+        // Auto-load on page load
+        window.onload = loadStocks;
+    </script>
+</body>
+</html>
