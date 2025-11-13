@@ -1,160 +1,98 @@
 # Stock5 📈
 
-A modern, elegant web application for viewing real-time stock market data from Yahoo Finance. Built with vanilla JavaScript, HTML5, and CSS3 - no frameworks required!
+A simple, clean stock market viewer with demo data. Everything in one HTML file!
+
+## 🚀 Quick Start
+
+Just open `index.html` in any web browser. That's it!
+
+No build process, no dependencies, no installation needed.
 
 ## ✨ Features
 
-- **Real-time Stock Data** - Fetch live stock quotes from Yahoo Finance API
-- **Responsive Design** - Optimized for both mobile and desktop devices
-- **Dark Mode** - Toggle between light and dark themes with persistent storage
-- **Popular Stocks** - Quick access to commonly traded stocks (AAPL, MSFT, GOOGL, etc.)
-- **Multi-stock Search** - Search for multiple stocks at once (comma-separated)
-- **Comprehensive Data** - View price, change, volume, market cap, 52-week highs/lows, and more
-- **Elegant UI** - Modern card-based design with smooth animations
-- **Auto-load** - Default stocks load automatically on page load
+- **8 Popular Stocks**: AAPL, MSFT, GOOGL, TSLA, AMZN, META, NVDA, NFLX
+- **Auto-load**: Shows 4 stocks when you open the page
+- **Search**: Type stock symbols (e.g., "AAPL" or "AAPL,MSFT,TSLA")
+- **Quick Access**: Click any stock chip to view instantly
+- **Responsive**: Works on desktop and mobile
+- **Demo Data**: Static data for demonstration purposes
 
-## 🚀 Getting Started
+## 📋 How to Use
 
-### Local Development
+### Open the App
+1. Double-click `index.html`
+2. Or open it in any browser
+3. Or use a local server: `python3 -m http.server 8080`
 
-1. Clone this repository
-2. Open `index.html` in your web browser
-3. That's it! No build process or dependencies required
+### Search for Stocks
+- **Single stock**: Type `AAPL` and click Search
+- **Multiple stocks**: Type `AAPL,MSFT,GOOGL` and click Search
+- **Quick access**: Click any chip button (AAPL, MSFT, etc.)
 
-You can use any local server:
+### Available Stocks
+- AAPL - Apple Inc.
+- MSFT - Microsoft Corporation
+- GOOGL - Alphabet Inc.
+- TSLA - Tesla, Inc.
+- AMZN - Amazon.com, Inc.
+- META - Meta Platforms, Inc.
+- NVDA - NVIDIA Corporation
+- NFLX - Netflix, Inc.
 
-```bash
-# Using Python 3
-python -m http.server 8000
-
-# Using Python 2
-python -m SimpleHTTPServer 8000
-
-# Using Node.js http-server
-npx http-server
-
-# Using PHP
-php -S localhost:8000
-```
-
-Then open your browser to `http://localhost:8000`
-
-## 📖 Usage
-
-### Searching for Stocks
-
-1. **Use the search bar**: Type a stock symbol (e.g., `AAPL`) and click Search or press Enter
-2. **Search multiple stocks**: Enter comma-separated symbols (e.g., `AAPL,MSFT,TSLA`)
-3. **Click popular stocks**: Click any of the popular stock chips for quick access
-
-### Stock Information Displayed
+## 🎨 What's Displayed
 
 Each stock card shows:
-- **Symbol & Company Name**
-- **Current Price** with currency
-- **Price Change** (absolute and percentage)
-- **Day High/Low**
-- **Trading Volume**
-- **Market Capitalization**
-- **52-Week High/Low** (when available)
-- **Exchange, Quote Type, Market State**
+- Stock symbol and company name
+- Current price
+- Price change (absolute and percentage)
+- Day high and low
+- Trading volume
+- Market capitalization
 
-### Dark Mode
+## 💡 Technical Details
 
-Click the sun/moon icon in the header to toggle between light and dark themes. Your preference is saved automatically.
-
-## 🔧 Technical Details
-
-### API
-
-This application uses the Yahoo Finance public API:
-
-- **Endpoint**: `https://query1.finance.yahoo.com/v7/finance/quote`
-- **Parameters**: `symbols` (comma-separated stock symbols)
-- **CORS Handling**: Includes fallback to CORS proxy if needed
-
-### Technologies
-
-- **HTML5** - Semantic markup
-- **CSS3** - Modern features (Grid, Flexbox, CSS Variables, Animations)
-- **Vanilla JavaScript** - No frameworks or libraries
-- **Yahoo Finance API** - Real-time stock data
-
-### Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
-## 📱 Responsive Breakpoints
-
-- **Mobile**: < 640px
-- **Tablet**: 640px - 1024px
-- **Desktop**: > 1024px
-
-## 🎨 Design Features
-
-- Mobile-first responsive design
-- CSS Grid and Flexbox layouts
-- Smooth transitions and animations
-- Accessible color contrast (WCAG compliant)
-- System font stack with Inter as primary typeface
-- Custom SVG icons
-- Card-based UI with elevation shadows
+- **Single HTML file**: All CSS and JavaScript inline
+- **No frameworks**: Pure HTML, CSS, and vanilla JavaScript
+- **No API calls**: Uses static demo data
+- **Instant load**: No loading delays
+- **Lightweight**: ~12KB total size
 
 ## ⚠️ Important Notes
 
-- **Market Data Delays**: Yahoo Finance data may have slight delays
-- **Not Investment Advice**: This tool is for informational purposes only
-- **CORS Limitations**: Due to browser CORS policies, a proxy may be used for API requests
-- **Rate Limiting**: Yahoo Finance may rate-limit requests
+- This app uses **demo data only**
+- Data is static and for educational purposes
+- **Not for real trading or investment decisions**
+- No live market data
 
-## 🔐 Security & Privacy
+## 📁 File Structure
 
-- No user data is collected or stored (except theme preference in localStorage)
-- All API requests go directly to Yahoo Finance (or through a CORS proxy)
-- No analytics or tracking
-- Open source - inspect the code yourself!
-
-## 🛠️ Customization
-
-### Adding More Popular Stocks
-
-Edit the `CONFIG.defaultStocks` array in `app.js`:
-
-```javascript
-const CONFIG = {
-    defaultStocks: ['AAPL', 'MSFT', 'GOOGL', 'YOUR_SYMBOL']
-};
+```
+Stock5/
+├── index.html        # Complete app (CSS + JS + HTML)
+├── README.md         # This file
+├── app.js.old       # Old separate JS (archived)
+└── styles.css.old   # Old separate CSS (archived)
 ```
 
-### Changing Theme Colors
+## 🔧 Customization
 
-Edit CSS variables in `styles.css`:
+To modify stock data, edit the `stocks` object in the `<script>` section of `index.html`:
 
-```css
-:root {
-    --primary: #3b82f6;  /* Your brand color */
-    /* ... other variables */
-}
+```javascript
+const stocks = {
+    'AAPL': {
+        symbol: 'AAPL',
+        name: 'Apple Inc.',
+        price: 189.25,
+        // ... more properties
+    }
+};
 ```
 
 ## 📄 License
 
-This project is open source and available for personal and commercial use.
-
-## 🤝 Contributing
-
-Feel free to fork, modify, and submit pull requests!
-
-## 📞 Support
-
-For issues or questions, please open an issue on the GitHub repository.
+Open source - feel free to use and modify!
 
 ---
 
-**Built with ❤️ using vanilla web technologies**
-
-**Data provided by Yahoo Finance • Not investment advice**
+**Built with simplicity in mind - just HTML, CSS, and JavaScript**
